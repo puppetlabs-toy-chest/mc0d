@@ -1,7 +1,7 @@
 #ifndef BROKER_H_
 #define BROKER_H_
 
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <zmq.hpp>
 #include "client.h"
@@ -19,8 +19,8 @@ class Broker {
     void handleMessage(const Message& message);
     void sendMessage(Client &client, std::vector<std::string> frames);
     std::string readPrivateKey(std::string path);
-    std::map<std::string,Client> clients_;
-    std::map<std::string,Topic> topics_;
+    std::unordered_map<std::string,Client> clients_;
+    std::unordered_map<std::string,Topic> topics_;
     zmq::socket_t* socket_;
     size_t recv_ = 0;
     size_t sent_ = 0;
