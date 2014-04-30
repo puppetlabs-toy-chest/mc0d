@@ -11,6 +11,7 @@ class Message {
     explicit Message(zmq::socket_t& socket);
     explicit Message(std::vector<std::string> frames) : frames_(frames) {}
     void send(zmq::socket_t& socket) const;
+    size_t size() const;
     std::string frame(int index) const;
   private:
     std::vector<std::string> frames_;

@@ -34,7 +34,7 @@ void Broker::main_loop() {
 void Broker::handleMessage(const Message& message) {
     ++recv_;
     std::string client_id = message.frame(0);
-    Client client = clients_[client_id];
+    Client& client = clients_[client_id];
     if (client.state == ClientState::NEW) {
         client.id = client_id;
     }
@@ -56,10 +56,41 @@ void Broker::handleMessage(const Message& message) {
             break;
 
         case "SUB"_hash:
+            for (size_t i = 3; i < message.size(); i++) {
+                Topic& topic = topics_[message.frame(i)];
+                topic.subscribers.insert(&client);
+            }
+            break;
+
         case "UNSUB"_hash:
-        case "PUT"_hash:
+            for (size_t i = 3; i < message.size(); i++) {
+                std::string name(message.frame(i));
+                Topic& topic = topics_[name];
+                topic.subscribers.erase(&client);
+                if (topic.subscribers.size() == 0) {
+                    topics_.erase(name);
+                }
+            }
+            break;
+
+        case "PUT"_hash: {
+            std::vector<std::string> payload = { "MESSAGE" };
+            for (size_t i = 3; i < message.size(); i++) {
+                payload.push_back(message.frame(i));
+            }
+            std::string name(message.frame(3));
+            Topic& topic = topics_[name];
+            for (auto& subscriber : topic.subscribers) {
+                sendMessage(*subscriber, payload);
+            }
+            break;
+        }
+
         case "NOOP"_hash:
-            sendMessage(client, { "NOOP", "I'm slack "});
+            // TODO(richardc) - we shouldn't really send this, but that we do
+            // means we keep up our end of the heart-beating, just simply by
+            // being chatty
+            sendMessage(client, { "NOOP" });
             break;
 
         default:

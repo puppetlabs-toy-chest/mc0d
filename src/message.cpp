@@ -29,6 +29,10 @@ void Message::send(zmq::socket_t& socket) const {
     }
 }
 
+size_t Message::size() const {
+    return frames_.size();
+}
+
 std::string Message::frame(int index) const {
     return frames_.at(index);
 }
