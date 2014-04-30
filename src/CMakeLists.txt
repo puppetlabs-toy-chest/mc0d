@@ -12,6 +12,8 @@ endif()
 # Set the sources
 set(SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/broker.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/message.cpp"
 )
 
 # Set include directories
