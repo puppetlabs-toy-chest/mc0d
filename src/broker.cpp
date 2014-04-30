@@ -74,12 +74,18 @@ void Broker::handleMessage(const Message& message) {
             break;
 
         case "PUT"_hash: {
+            std::string name(message.frame(3));
+            Topic& topic = topics_[name];
+            if (topic.subscribers.empty()) {
+                // No need to dance if nobody's watching
+                break;
+            }
+
             std::vector<std::string> payload = { "MESSAGE" };
             for (size_t i = 3; i < message.size(); i++) {
                 payload.push_back(message.frame(i));
             }
-            std::string name(message.frame(3));
-            Topic& topic = topics_[name];
+
             for (auto& subscriber : topic.subscribers) {
                 sendMessage(*subscriber, payload);
             }
