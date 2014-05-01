@@ -12,6 +12,7 @@ endif()
 # Set include directories
 include_directories(
     ${ZEROMQ_INCLUDE_DIR}
+    ${LOG4CXX_INCLUDE_DIR}
 )
 
 
@@ -34,12 +35,14 @@ install(TARGETS broker DESTINATION .)
 set(TORTURE_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/torture_main.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/message.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/torture.cpp"
 )
 
 add_executable(torture ${TORTURE_SOURCES})
 
 target_link_libraries(torture
     ${ZEROMQ_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 install(TARGETS torture DESTINATION .)

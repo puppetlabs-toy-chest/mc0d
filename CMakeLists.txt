@@ -5,6 +5,7 @@ set(VENDOR_DIRECTORY "${PROJECT_SOURCE_DIR}/vendor")
 list(APPEND CMAKE_MODULE_PATH ${VENDOR_DIRECTORY})
 
 find_package(ZEROMQ REQUIRED)
+find_package(LOG4CXX REQUIRED)
 
 include_directories("${VENDOR_DIRECTORY}/cppzmq")
 
