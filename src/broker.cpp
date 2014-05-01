@@ -33,14 +33,14 @@ void Broker::main_loop() {
 // As we're a DEALER the format will be [ SENDER, '' ]
 void Broker::handleMessage(const Message& message) {
     ++recv_;
-    std::string client_id = message.frame(0);
+    const std::string& client_id = message.frames().at(0);
     Client& client = clients_[client_id];
     if (client.state == ClientState::NEW) {
         client.id = client_id;
     }
     client.last_recv = std::chrono::steady_clock::now();
 
-    std::string verb = message.frame(2);
+    const std::string& verb = message.frames().at(2);
     switch (hash_(verb.c_str())) {
         case "CONNECT"_hash:
             if (client.state == ClientState::NEW) {
@@ -56,15 +56,16 @@ void Broker::handleMessage(const Message& message) {
             break;
 
         case "SUB"_hash:
-            for (size_t i = 3; i < message.size(); i++) {
-                Topic& topic = topics_[message.frame(i)];
+            for (size_t i = 3; i < message.frames().size(); i++) {
+                const std::string& name(message.frames().at(i));
+                Topic& topic = topics_[name];
                 topic.subscribers.insert(&client);
             }
             break;
 
         case "UNSUB"_hash:
-            for (size_t i = 3; i < message.size(); i++) {
-                std::string name(message.frame(i));
+            for (size_t i = 3; i < message.frames().size(); i++) {
+                const std::string& name(message.frames().at(i));
                 Topic& topic = topics_[name];
                 topic.subscribers.erase(&client);
                 if (topic.subscribers.size() == 0) {
@@ -74,7 +75,7 @@ void Broker::handleMessage(const Message& message) {
             break;
 
         case "PUT"_hash: {
-            std::string name(message.frame(3));
+            std::string name(message.frames().at(3));
             Topic& topic = topics_[name];
             if (topic.subscribers.empty()) {
                 // No need to dance if nobody's watching
@@ -82,8 +83,8 @@ void Broker::handleMessage(const Message& message) {
             }
 
             std::vector<std::string> payload = { "MESSAGE" };
-            for (size_t i = 3; i < message.size(); i++) {
-                payload.push_back(message.frame(i));
+            for (size_t i = 3; i < message.frames().size(); i++) {
+                payload.push_back(message.frames().at(i));
             }
 
             for (auto& subscriber : topic.subscribers) {
