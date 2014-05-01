@@ -1,10 +1,13 @@
 #include "broker.h"
 #include "message.h"
 #include "string_hash.h"
+#include "logger.h"
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <zmq.hpp>
+
+DECLARE_LOGGER_NAMESPACE("broker")
 
 void Broker::main_loop() {
     zmq::context_t context;
@@ -13,12 +16,11 @@ void Broker::main_loop() {
 
     // key the curve
     int on = 1;
-    std::cout << "CURVE_SERVER" << std::endl;
-
+    LOGGER_DEBUG("ZMQ_CURVE_SERVER");
     socket.setsockopt(ZMQ_CURVE_SERVER, &on, sizeof(on));
 
     std::string private_key = readPrivateKey(private_key_);
-    std::cout << "CURVE_KEY";
+    LOGGER_DEBUG("ZMQ_CURVE_SECRETKEY");
     socket.setsockopt(ZMQ_CURVE_SECRETKEY, private_key.data(), private_key.size());
 
     socket.bind(bind_.c_str());
@@ -26,7 +28,7 @@ void Broker::main_loop() {
     while (true) {
         Message message(socket);
         handleMessage(message);
-        std::cout << "Now tracking " << clients_.size() << " clients.  RECV: " << recv_ << " SENT: " << sent_ << std::endl;
+        LOGGER_INFO("Now tracking " << clients_.size() << " clients.  RECV: " << recv_ << " SENT: " << sent_);
     }
 }
 
@@ -40,7 +42,14 @@ void Broker::handleMessage(const Message& message) {
     }
     client.last_recv = std::chrono::steady_clock::now();
 
+    LOGGER_INFO("handleMessage: client '" << client_id << "' message = " << message.frames().size());
+    if (message.frames().size() < 3) {
+        LOGGER_WARN("got short message from " << client_id);
+        return;
+    }
     const std::string& verb = message.frames().at(2);
+
+    LOGGER_INFO("handleMessage: verb " << verb);
     switch (hash_(verb.c_str())) {
         case "CONNECT"_hash:
             if (client.state == ClientState::NEW) {
