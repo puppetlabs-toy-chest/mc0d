@@ -9,26 +9,39 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
-# Set the sources
-set(SOURCES
-    "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/broker.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/message.cpp"
-)
-
 # Set include directories
 include_directories(
     ${ZEROMQ_INCLUDE_DIR}
 )
 
-add_executable(broker ${SOURCES})
 
-add_dependencies(broker libzmq)
+# broker
+set(BROKER_SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/broker_main.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/broker.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/message.cpp"
+)
 
-# Link in additional libraries
+add_executable(broker ${BROKER_SOURCES})
+
 target_link_libraries(broker
     ${ZEROMQ_LIBRARIES}
 )
 
 install(TARGETS broker DESTINATION .)
+
+# The torture tool
+set(TORTURE_SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/torture_main.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/message.cpp"
+)
+
+add_executable(torture ${TORTURE_SOURCES})
+
+target_link_libraries(torture
+    ${ZEROMQ_LIBRARIES}
+)
+
+install(TARGETS torture DESTINATION .)
+
 
