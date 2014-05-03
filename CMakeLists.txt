@@ -7,7 +7,12 @@ list(APPEND CMAKE_MODULE_PATH ${VENDOR_DIRECTORY})
 find_package(ZEROMQ REQUIRED)
 find_package(LOG4CXX REQUIRED)
 
-include_directories("${VENDOR_DIRECTORY}/cppzmq")
+# Set include directories
+include_directories(
+    ${ZEROMQ_INCLUDE_DIR}
+    ${LOG4CXX_INCLUDE_DIR}
+    "${VENDOR_DIRECTORY}/cppzmq"
+)
 
 # And compile our stuff
 add_subdirectory(src)

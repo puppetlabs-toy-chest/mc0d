@@ -9,13 +9,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
-# Set include directories
-include_directories(
-    ${ZEROMQ_INCLUDE_DIR}
-    ${LOG4CXX_INCLUDE_DIR}
-)
-
-
 # broker
 set(BROKER_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/broker_main.cpp"
