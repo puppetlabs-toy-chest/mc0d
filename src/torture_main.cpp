@@ -4,8 +4,7 @@
 DECLARE_LOGGER_NAMESPACE("torture.main")
 
 int main() {
-    Logger log;
-    LOGGER_INFO("Starting torture suite")
+    Logger logger("");
     Torture torture("tcp://127.0.0.1:61616", "middleware.public");
     torture.main_loop();
     return 0;

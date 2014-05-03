@@ -2,9 +2,8 @@
 #define LOGGER_H_
 
 #include <log4cxx/logger.h>
+#include <log4cxx/basicconfigurator.h>
 #include <log4cxx/propertyconfigurator.h>
-#include <log4cxx/patternlayout.h>
-#include <log4cxx/consoleappender.h>
 
 // Convenience macros so we can replace loggers in the futures
 // DECLARE_LOGGER_NAMESPACE is intended to be called once a compile unit like
@@ -21,11 +20,14 @@
 
 class Logger {
   public:
-    Logger() {
-        log4cxx::LayoutPtr layout = new log4cxx::PatternLayout("%d [%t] %-5p %c (%F:%L) - %m%n");
-        log4cxx::AppenderPtr appender = new log4cxx::ConsoleAppender(layout);
-        log4cxx::Logger::getRootLogger()->addAppender(appender);
-        log4cxx::Logger::getRootLogger()->setLevel(log4cxx::Level::getTrace());
+    Logger() = delete;
+    explicit Logger(std::string path) {
+        if (path.size()) {
+            log4cxx::PropertyConfigurator::configure(path);
+        }
+        else {
+            log4cxx::BasicConfigurator::configure();
+        }
     }
 };
 
