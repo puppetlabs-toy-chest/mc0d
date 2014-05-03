@@ -6,9 +6,12 @@ list(APPEND CMAKE_MODULE_PATH ${VENDOR_DIRECTORY})
 
 find_package(ZEROMQ REQUIRED)
 find_package(LOG4CXX REQUIRED)
+find_package(Boost 1.48 COMPONENTS program_options REQUIRED)
+
 
 # Set include directories
 include_directories(
+    ${Boost_INCLUDE_DIRS}
     ${ZEROMQ_INCLUDE_DIR}
     ${LOG4CXX_INCLUDE_DIR}
     "${VENDOR_DIRECTORY}/cppzmq"

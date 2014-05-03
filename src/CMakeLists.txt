@@ -21,6 +21,7 @@ add_executable(broker ${BROKER_SOURCES})
 target_link_libraries(broker
     ${ZEROMQ_LIBRARIES}
     ${LOG4CXX_LIBRARIES}
+    ${Boost_LIBRARIES}
 )
 
 install(TARGETS broker DESTINATION .)
