@@ -8,11 +8,8 @@ Message::Message(zmq::socket_t& socket) {
         std::string as_string((char*) message.data(), message.size());
         frames_.push_back(as_string);
 
-        // See if there are more
-        int more = 0;
-        size_t size = sizeof(more);
-        socket.getsockopt(ZMQ_RCVMORE, &more, &size);
-        if (!more) {
+        // See if there are more messages (multipart)
+        if (!message.more()) {
             return;
         }
     }
