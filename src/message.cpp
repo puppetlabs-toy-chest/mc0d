@@ -29,6 +29,15 @@ void Message::send(zmq::socket_t& socket) const {
     }
 }
 
+std::string Message::inspect() const {
+    std::string result;
+    for (auto frame : frames_) {
+        result = result + " - \""+ frame + '"';
+    }
+
+    return result;
+}
+
 const std::vector<std::string>& Message::frames() const {
     return frames_;
 }
