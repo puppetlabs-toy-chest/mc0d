@@ -1,14 +1,5 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-# Set compiler-specific flags
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror -Wno-unused-parameter -Wno-tautological-constant-out-of-range-compare")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-local-typedefs")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-endif()
-
 # broker
 set(BROKER_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/broker_main.cpp"
@@ -41,5 +32,3 @@ target_link_libraries(torture
 )
 
 install(TARGETS torture DESTINATION .)
-
-
