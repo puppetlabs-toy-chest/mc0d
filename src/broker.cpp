@@ -50,6 +50,19 @@ void Broker::handleMessage(const Message& message) {
     }
     const std::string& verb = message.frames().at(2);
 
+    std::unordered_map<std::string,std::string> headers;
+    std::vector<std::string> body;
+    for (size_t i = 3; i < message.frames().size(); i = i + 2) {
+        const std::string& key = message.frames().at(i);
+        if (!key.size()) {
+            auto start_from = begin(message.frames());
+            std::advance(start_from, i + 1);
+            body.insert(begin(body), start_from, end(message.frames()));
+            break;
+        }
+        headers[key] = message.frames().at(i + 1);
+    }
+
     LOGGER_INFO("handleMessage: verb " << verb);
     switch (hash_(verb.c_str())) {
         case "CONNECT"_hash:
@@ -66,18 +79,19 @@ void Broker::handleMessage(const Message& message) {
             break;
 
         case "SUB"_hash:
-            for (size_t i = 3; i < message.frames().size(); i++) {
-                const std::string& name(message.frames().at(i));
+            for (const auto& name : body) {
                 Topic& topic = topics_[name];
                 topic.subscribers.insert(&client);
             }
             break;
 
         case "UNSUB"_hash:
-            for (size_t i = 3; i < message.frames().size(); i++) {
-                const std::string& name(message.frames().at(i));
+            for (const auto& name : body) {
                 Topic& topic = topics_[name];
                 topic.subscribers.erase(&client);
+
+                // TODO(richardc): consider doing this cleanup async if we're
+                // dropping/creating the same topics often
                 if (topic.subscribers.size() == 0) {
                     topics_.erase(name);
                 }
@@ -85,7 +99,7 @@ void Broker::handleMessage(const Message& message) {
             break;
 
         case "PUT"_hash: {
-            std::string name(message.frames().at(3));
+            std::string name = headers["TOPIC"];
             Topic& topic = topics_[name];
             if (topic.subscribers.empty()) {
                 // No need to dance if nobody's watching
@@ -93,8 +107,17 @@ void Broker::handleMessage(const Message& message) {
             }
 
             std::vector<std::string> payload = { "MESSAGE" };
-            for (size_t i = 3; i < message.frames().size(); i++) {
-                payload.push_back(message.frames().at(i));
+            for (const auto &kv : headers) {
+                // copy every header but ID
+                if (hash_(kv.first.c_str()) != "ID"_hash) {
+                    payload.push_back(kv.first);
+                    payload.push_back(kv.second);
+                }
+            }
+            payload.push_back("");
+
+            for (auto& frame : body) {
+                payload.push_back(frame);
             }
 
             for (auto& subscriber : topic.subscribers) {
@@ -111,7 +134,21 @@ void Broker::handleMessage(const Message& message) {
             break;
 
         default:
-            sendMessage(client, {"ERROR", "Unknown command verb '" + verb + "'" });
+            LOGGER_ERROR("Unknown command: " << verb)
+            std::vector<std::string> payload = { "ERROR", "MESSAGE", "Unknown command verb '" + verb + "'"  };
+            auto search = headers.find("ID");
+            if (search != end(headers)) {
+                payload.push_back("ID");
+                payload.push_back(search->second);
+            }
+            sendMessage(client, payload);
+            return;
+    }
+
+    // Was an ACK requested?
+    auto search = headers.find("ID");
+    if (search != end(headers)) {
+        sendMessage(client, { "OK", "ID", search->second });
     }
 }
 

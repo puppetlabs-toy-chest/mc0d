@@ -1,8 +1,8 @@
-This is a message broker implementing 0.2 of the mcollective zeromq protocol.
+This is a message broker implementing 0.3 of the mcollective zeromq protocol.
 
-It's in C++ for peformance reasons, if you want just to understand the protocol
-you may find the ruby implemention in
-mcollective-zeromq-connector/bin/middleware easier to read.
+It's in C++ for peformance reasons.  If you want to understand the protocol
+you may find the ruby implemention in mcollective-zeromq-connector/scripts/middleware
+easier to read.
 
 # Configuration
 
