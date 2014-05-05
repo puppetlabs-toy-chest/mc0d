@@ -25,7 +25,7 @@ void Message::send(zmq::socket_t& socket) const {
         memcpy(message.data(), part.data(), part.size());
 
         // SNDMORE on all but the last frame (count will hit 0)
-        socket.send(message, ZMQ_NOBLOCK | (--count ? ZMQ_SNDMORE : 0));
+        socket.send(message, (--count ? ZMQ_SNDMORE : 0));
     }
 }
 
