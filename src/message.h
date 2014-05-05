@@ -8,6 +8,7 @@
 
 class Message {
   public:
+    Message() {}
     explicit Message(zmq::socket_t& socket);
     explicit Message(std::vector<std::string> frames) : frames_(frames) {}
     void send(zmq::socket_t& socket) const;
