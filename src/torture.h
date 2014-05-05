@@ -14,7 +14,7 @@ class Torture {
     }
     void main_loop();
   private:
-    void chattyClient(int id);
+    void chattyClient(int id, int count);
     std::string target_;
     std::string public_key_;
 };

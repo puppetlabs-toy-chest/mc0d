@@ -133,10 +133,6 @@ void Broker::handleMessage(const Message& message) {
         }
 
         case "NOOP"_hash:
-            // TODO(richardc) - we shouldn't really send this, but that we do
-            // means we keep up our end of the heart-beating, just simply by
-            // being chatty
-            sendMessage(client, { "NOOP" });
             break;
 
         default:
