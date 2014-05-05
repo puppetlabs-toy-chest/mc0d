@@ -8,6 +8,8 @@ find_package(ZEROMQ REQUIRED)
 find_package(LOG4CXX REQUIRED)
 find_package(Boost 1.48 COMPONENTS program_options REQUIRED)
 
+# Include vendored library
+include(${VENDOR_DIRECTORY}/gmock.cmake)
 
 # Set include directories
 include_directories(
@@ -17,5 +19,6 @@ include_directories(
     "${VENDOR_DIRECTORY}/cppzmq"
 )
 
-# And compile our stuff
+# Add the main binary
 add_subdirectory(src)
+
