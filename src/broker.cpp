@@ -2,6 +2,7 @@
 #include "message.h"
 #include "string_hash.h"
 #include "logger.h"
+#include "timer.h"
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -28,8 +29,13 @@ void Broker::main_loop() {
 
     while (true) {
         Message message(socket);
+        Timer timer;
         handleMessage(message);
-        LOGGER_INFO("Now tracking " << clients_.size() << " clients.  RECV: " << recv_ << " SENT: " << sent_);
+        LOGGER_INFO("Handled message in " << timer.elapsedSeconds() << " seconds."
+                    << " Now tracking " << clients_.size() << " clients. "
+                    << topics_.size() << " topics."
+                    << " RECV: " << recv_
+                    << " SENT: " << sent_);
     }
 }
 
