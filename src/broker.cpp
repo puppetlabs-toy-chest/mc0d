@@ -23,6 +23,7 @@ void Broker::main_loop() {
     LOGGER_DEBUG("ZMQ_CURVE_SECRETKEY");
     socket.setsockopt(ZMQ_CURVE_SECRETKEY, private_key.data(), private_key.size());
 
+    LOGGER_DEBUG("Binding socket to " << bind_)
     socket.bind(bind_.c_str());
 
     while (true) {
@@ -128,6 +129,7 @@ void Broker::sendMessage(Client &client, std::vector<std::string> frames) {
 }
 
 std::string Broker::readPrivateKey(std::string path) {
+    LOGGER_DEBUG("Loading privatekey from " << path)
     std::ifstream input(path);
     std::string key;
     input >> key;

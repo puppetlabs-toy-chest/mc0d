@@ -7,7 +7,7 @@
 #include <zmq.hpp>
 #include <zmq_utils.h>
 
-DECLARE_LOGGER_NAMESPACE("torture.main")
+DECLARE_LOGGER_NAMESPACE("torture")
 
 void Torture::main_loop() {
     std::vector<std::thread> workers;
