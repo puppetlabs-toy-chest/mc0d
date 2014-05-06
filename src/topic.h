@@ -8,7 +8,7 @@ namespace mc0 {
 
 class Topic {
   public:
-    std::unordered_set<Client*> subscribers;
+    std::unordered_set<std::shared_ptr<Client>> subscribers;
 };
 
 }  // namespace mc0
