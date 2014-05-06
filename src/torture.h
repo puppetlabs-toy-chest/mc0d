@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 
+namespace mc0 {
+
 class Torture {
   public:
     Torture(std::string target, std::string public_key) :
@@ -18,5 +20,7 @@ class Torture {
     std::string target_;
     std::string public_key_;
 };
+
+}  // namespace mc0
 
 #endif

@@ -1,6 +1,8 @@
 #include "test.h"
 #include "../src/message.h"
 
+namespace mc0 {
+
 using ::testing::_;
 
 TEST(MessageTest, BareConstructor) {
@@ -80,3 +82,5 @@ TEST_F(MessageTest0MQ, SendRecvMultipart) {
     EXPECT_EQ("shoes!", shoes.frames().at(1));
     EXPECT_EQ("socks", shoes.frames().at(2));
 }
+
+}  // namespace mc0

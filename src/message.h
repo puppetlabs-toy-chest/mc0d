@@ -4,8 +4,9 @@
 #include <vector>
 #include <zmq.hpp>
 
-// A multi-frame message type we can print and send
+namespace mc0 {
 
+/// A multi-frame message type we can print and send
 class Message {
   public:
     Message() {}
@@ -17,5 +18,7 @@ class Message {
   private:
     std::vector<std::string> frames_;
 };
+
+}  // namespace mc0
 
 #endif

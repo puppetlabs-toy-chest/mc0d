@@ -3,6 +3,8 @@
 
 #include <chrono>
 
+namespace mc0 {
+
 /// A simple stopwatch/timer we can use for user feedback.  We use the
 /// std::chrono::steady_clock as we don't want to be affected if the system
 /// clock changed around us (think ntp skew/leapseconds).
@@ -25,5 +27,7 @@ class Timer {
   private:
     std::chrono::time_point<std::chrono::steady_clock> start_;
 };
+
+}  // namespace mc0
 
 #endif  // TIMER_H_

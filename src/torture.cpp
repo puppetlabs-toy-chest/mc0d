@@ -9,7 +9,9 @@
 #include <zmq.hpp>
 #include <zmq_utils.h>
 
-DECLARE_LOGGER_NAMESPACE("torture")
+namespace mc0 {
+
+DECLARE_LOGGER_NAMESPACE("mc0.torture")
 
 void Torture::main_loop() {
     std::vector<std::thread> workers;
@@ -78,3 +80,5 @@ void Torture::chattyClient(int id, int count) {
 
     LOGGER_INFO(identity << " exiting");
 }
+
+}  // namespace mc0

@@ -8,7 +8,9 @@
 #include <fstream>
 #include <zmq.hpp>
 
-DECLARE_LOGGER_NAMESPACE("broker")
+namespace mc0 {
+
+DECLARE_LOGGER_NAMESPACE("mc0.broker")
 
 void Broker::main_loop() {
     zmq::context_t context;
@@ -174,3 +176,5 @@ std::string Broker::readPrivateKey(std::string path) {
     input >> key;
     return key;
 }
+
+}  // namespace mc0

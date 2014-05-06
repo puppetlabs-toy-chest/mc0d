@@ -18,6 +18,8 @@
 #define LOGGER_WARN(log)  LOG4CXX_WARN(logger, log);
 #define LOGGER_ERROR(log) LOG4CXX_ERROR(logger, log);
 
+namespace mc0 {
+
 class Logger {
   public:
     Logger() = delete;
@@ -30,5 +32,7 @@ class Logger {
         }
     }
 };
+
+}  // namespace mc0
 
 #endif  // LOGGER_H_

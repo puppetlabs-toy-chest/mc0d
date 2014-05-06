@@ -21,8 +21,8 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    Logger logger(vm["logger-config"].as<std::string>());
-    Broker broker(vm["bind"].as<std::string>(), vm["curve-private-key"].as<std::string>());
+    mc0::Logger logger(vm["logger-config"].as<std::string>());
+    mc0::Broker broker(vm["bind"].as<std::string>(), vm["curve-private-key"].as<std::string>());
     broker.main_loop();
     return 0;
 }

@@ -8,6 +8,8 @@
 #include "topic.h"
 #include "message.h"
 
+namespace mc0 {
+
 class Broker {
   public:
     Broker(std::string bind, std::string private_key) :
@@ -27,5 +29,7 @@ class Broker {
     std::string bind_;
     std::string private_key_;
 };
+
+}  // namespace mc0
 
 #endif

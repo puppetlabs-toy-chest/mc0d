@@ -1,5 +1,7 @@
 #include "message.h"
 
+namespace mc0 {
+
 Message::Message(zmq::socket_t& socket) {
     while (true) {
         zmq::message_t message;
@@ -38,3 +40,5 @@ std::string Message::inspect() const {
 const std::vector<std::string>& Message::frames() const {
     return frames_;
 }
+
+}  // namespace mc0
