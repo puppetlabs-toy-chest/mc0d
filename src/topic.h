@@ -2,6 +2,7 @@
 #define TOPIC_H_
 
 #include <unordered_set>
+#include <memory>
 #include "client.h"
 
 namespace mc0 {
